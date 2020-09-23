@@ -10,12 +10,6 @@ import {
 } from 'mdbreact';
 import ContactAlert from '../ContactAlert';
 
-var helper = require('sendgrid').mail;
-var from_email = new helper.Email('admin@study-check.net');
-var to_email = new helper.Email('donationbuycraft@gmail.com');
-var subject = 'Hello World from the SendGrid Node.js Library!';
-var content = new helper.Content('text/plain', 'Hello, Email!');
-var mail = new helper.Mail(from_email, subject, to_email, content);
 
 
 const ContactCard = () => {
@@ -27,12 +21,17 @@ const ContactCard = () => {
     contactSubject: ""
   });
 
-  var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
-  var request = sg.emptyRequest({
-    method: 'POST',
-    path: '/v3/mail/send',
-    body: mail.toJSON(),
-  });
+
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
+    to: 'donationbuycraft@gmail.com',
+    from: 'admin@study-check.net',
+    subject: 'Sending with Twilio SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  };
+  sgMail.send(msg);
 
 
 
@@ -52,11 +51,6 @@ const ContactCard = () => {
       contactSubject: ""
 
     })
-    sg.API(request, function (error, response) {
-      console.log(response.statusCode);
-      console.log(response.body);
-      console.log(response.headers);
-    });
   };
 
   return (
