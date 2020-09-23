@@ -11,8 +11,8 @@ import {
 import ContactAlert from '../ContactAlert';
 
 var helper = require('sendgrid').mail;
-var from_email = new helper.Email('test@example.com');
-var to_email = new helper.Email('test@example.com');
+var from_email = new helper.Email('admin@study-check.net');
+var to_email = new helper.Email('donationbuycraft@gmail.com');
 var subject = 'Hello World from the SendGrid Node.js Library!';
 var content = new helper.Content('text/plain', 'Hello, Email!');
 var mail = new helper.Mail(from_email, subject, to_email, content);
