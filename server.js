@@ -1,10 +1,36 @@
 const express = require("express");
+// const cors = require('cors');
+// const sgMail = require('@sendgrid/mail');
 const mongoose = require("mongoose");
 const path = require("path");
 const routes = require("./routes");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 3001;
+
+
+
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// app.use(cors());
+
+// app.get('/send-email', (req, res) => {
+//   //get variables from query string
+
+//   const { recipient, sender, topic, text, html } = req.query;
+
+//   //sendgrid requirements
+//   const msg = {
+//     to: recipient,
+//     from: sender,
+//     subject: topic,
+//     text: text,
+//     html: html
+//   }
+
+//   //send email
+//   sgMail.send(msg)
+//     .then((msg) => console.log(text))
+// })
 
 // Define middleware
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +49,7 @@ app.use(routes);
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
+
 
 // Connect to the Mongo DB
 mongoose.connect(
