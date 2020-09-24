@@ -98,6 +98,33 @@ app.get('/send-passwordreset-email', (req, res) => {
 
 
 
+app.get('/send-contact-email-to-admins', (req, res) => {
+  //get variables from query string
+  const { recipient, sender, name } = req.query;
+
+  //sendgrid requirements
+  const msg = {
+    from: sender,
+    html: name,
+    "template_id": "d-b04ac1322f664837bcb9e22bf17b1493",
+    personalizations: [
+      {
+        to: [
+          {
+            email: recipient,
+          }
+        ],
+        dynamic_template_data: {
+          name: name,
+        }
+      }
+    ]
+  };
+
+  //send email
+  sgMail.send(msg)
+})
+
 
 //End of added code for mail sending uncomment the sgMail.send to actually send one(it does work)
 

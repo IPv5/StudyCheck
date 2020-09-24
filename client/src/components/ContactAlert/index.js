@@ -1,5 +1,5 @@
 import React from 'react';
-import { toast, ToastContainer, MDBContainer, MDBBtn } from 'mdbreact';
+import { toast, ToastContainer, MDBContainer } from 'mdbreact';
 
 const ContactAlert = () => {
   const notify = (type) => {

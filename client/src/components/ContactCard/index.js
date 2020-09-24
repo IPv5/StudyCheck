@@ -28,11 +28,26 @@ const ContactCard = () => {
       .catch(err => console.log(err))
   }
 
+  const sendContactEmailToAdmins = async () => {
+    await fetch(`http://localhost:3001/send-contact-email-to-admins?recipient=${adminMsg.to}&sender=${adminMsg.from}&topic=${adminMsg.subject}&text=${adminMsg.text}&name=${contactName}`)
+      .catch(err => console.log(err))
+  }
+
+
 
   const { contactEmail, contactMessage, contactName, contactSubject } = formInputs;
   const onChange = (e) => setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+
   const msg = {
-    to: 'donationbuycraft@gmail.com',
+    to: "donationbuycraft@gmail.com",
+    from: 'admin@study-check.net',
+    subject: contactSubject,
+    text: contactName,
+    name: contactName
+  };
+
+  const adminMsg = {
+    to: 'admin@study-check.net',
     from: 'admin@study-check.net',
     subject: contactSubject,
     text: `${contactMessage} From: ${contactName} Email: ${contactEmail}`,
@@ -53,6 +68,7 @@ const ContactCard = () => {
     })
 
     sendContactEmail();
+    sendContactEmailToAdmins();
     // sgMail.send(msg);
   };
 
