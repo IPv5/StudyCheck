@@ -5,21 +5,51 @@ import { useHistory, Redirect } from "react-router-dom";
 import setAuthToken from "../../utils/setAuthToken";
 import UserContext from "../../utils/UserContext";
 import AuthContext from "../../utils/AuthContext";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from "mdbreact";
+import { toast, MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from "mdbreact";
+import ContactAlert from '../ContactAlert';
 
 const LoginForm = ({ toggleLogin, isAuthenticated }) => {
   const { setUser } = React.useContext(UserContext);
   const { authData, setAuth } = React.useContext(AuthContext);
+  const [loginErrorAlert, setLoginErrorAlert] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [passwordAlert, setPasswordAlert] = useState(false);
 
   const { email, password } = formData;
+  const dummyName = "Dummy";
+
+  const sendPasswordResetEmail = async () => {
+    await fetch(`http://localhost:3001/send-passwordreset-email?recipient=${msg.to}&sender=${msg.from}&name=${dummyName}`)
+      .catch(err => console.log(err))
+  }
+  const msg = {
+    to: email,
+    from: 'admin@study-check.net',
+    name: "UserReset" //User that requested the pass reset
+  };
+
+  const handleLoginErrorAlert = () => {
+    setLoginErrorAlert(true);
+    toast.error("Oops! Looks like we couldn't find that email or password!", {
+      closeButton: false,
+    });
+
+  }
 
   // The e.target.name will take the name assignment from each form input (email, password, etc.)
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleResetPassword = () => {
+    sendPasswordResetEmail();
+    setPasswordAlert(true);
+    toast.success('Check your email to reset your password!', {
+      closeButton: false,
+    });
+  }
+
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +80,7 @@ const LoginForm = ({ toggleLogin, isAuthenticated }) => {
     } catch (error) {
       localStorage.removeItem("token");
       setAuth({ ...authData, isAuthenticated: false, token: null });
-      console.error(error);
+      handleLoginErrorAlert();
     }
   };
 
@@ -99,10 +129,28 @@ const LoginForm = ({ toggleLogin, isAuthenticated }) => {
               <MDBBtn type="submit" value="Login">
                 Login
               </MDBBtn>
+              {loginErrorAlert && (
+                <div>
+                  <h6 style={{ color: "red", paddingTop: "5px" }}>
+                    Looks like we couldn't find that email or password!
+                  </h6>
+                  <h6 style={{ color: "#4285f4" }}>
+                    <a
+                      onClick={handleResetPassword}
+                      style={{ textDecoration: "underline" }}
+                    >
+                      {" "}
+                      Reset{" "}
+                    </a>{" "}
+                    password here!
+                  </h6>
+                </div>
+              )}
             </div>
           </form>
         </MDBCol>
       </MDBRow>
+      {passwordAlert && <ContactAlert />}
     </MDBContainer>
   );
 };
