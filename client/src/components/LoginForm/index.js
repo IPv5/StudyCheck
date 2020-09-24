@@ -22,7 +22,7 @@ const LoginForm = ({ toggleLogin, isAuthenticated }) => {
   const dummyName = "Dummy";
 
   const sendPasswordResetEmail = async () => {
-    await fetch(`http://localhost:3001/send-passwordreset-email?recipient=${msg.to}&sender=${msg.from}&name=${dummyName}`)
+    await fetch(`https://studycheck.herokuapp.com/send-passwordreset-email?recipient=${msg.to}&sender=${msg.from}&name=${dummyName}`)
       .catch(err => console.log(err))
   }
   const msg = {

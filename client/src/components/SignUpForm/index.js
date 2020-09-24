@@ -34,7 +34,7 @@ const SignUpForm = ({
   };
 
   const sendSignupEmail = async () => {
-    await fetch(`http://localhost:3001/send-signup-email?recipient=${msg.to}&sender=${msg.from}&name=${fullName}`)
+    await fetch(`https://studycheck.herokuapp.com/send-signup-email?recipient=${msg.to}&sender=${msg.from}&name=${fullName}`)
       .catch(err => console.log(err))
   }
 
