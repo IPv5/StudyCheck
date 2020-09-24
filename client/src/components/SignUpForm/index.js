@@ -23,6 +23,7 @@ const SignUpForm = ({
   });
   const history = useHistory();
   const { firstname, lastname, email, password } = userData;
+  const fullName = `${firstname} ${lastname}`
 
   const onUserChange = (e) =>
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -30,6 +31,17 @@ const SignUpForm = ({
   const onLoginClick = () => {
     toggleSignUp();
     toggleLogin();
+  };
+
+  const sendSignupEmail = async () => {
+    await fetch(`http://localhost:3001/send-signup-email?recipient=${msg.to}&sender=${msg.from}&name=${fullName}`)
+      .catch(err => console.log(err))
+  }
+
+  const msg = {
+    to: email,
+    from: 'admin@study-check.net',
+    name: fullName
   };
 
   const onUserSubmit = async (e) => {
@@ -64,14 +76,17 @@ const SignUpForm = ({
         token: localStorage.getItem("token"),
       });
       setUser(res.data.user);
+      sendSignupEmail();
       // // Closes modal
       toggleSignUp();
+
     } catch (error) {
       localStorage.removeItem("token");
       setUserData({ ...userData, isAuthenticated: false, token: null });
       console.error(error);
       setIsRegistered(true);
     }
+
   };
   if (userData.isAuthenticated) {
     history.push("/dash");

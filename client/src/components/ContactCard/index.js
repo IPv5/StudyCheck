@@ -10,25 +10,6 @@ import {
 } from 'mdbreact';
 import ContactAlert from '../ContactAlert';
 
-// var helper = require('sendgrid').mail;
-// var from_email = new helper.Email('admin@study-check.net');
-// var to_email = new helper.Email('donationbuycraft@gmail.com');
-// var subject = 'Hello World from the SendGrid Node.js Library!';
-// var content = new helper.Content('text/plain', 'Hello, Email!');
-// var mail = new helper.Mail(from_email, subject, to_email, content);
-
-
-
-//Example from SendGrid for Node.js
-
-// var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
-// var request = sg.emptyRequest({
-//   mode: 'no-cors',
-//   method: 'POST',
-//   path: '/v3/mail/send',
-//   body: mail.toJSON(),
-// });
-const sgMail = require('@sendgrid/mail');
 
 
 
@@ -41,33 +22,22 @@ const ContactCard = () => {
     contactSubject: ""
   });
 
-  // const msg = {
-  //   to: 'donationbuycraft@gmail.com',
-  //   from: 'admin@study-check.net',
-  //   subject: 'Sending with Twilio SendGrid is Fun',
-  //   text: 'and easy to do anywhere, even with Node.js',
-  //   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  // };
+
+  const sendContactEmail = async () => {
+    await fetch(`http://localhost:3001/send-contact-email?recipient=${msg.to}&sender=${msg.from}&topic=${msg.subject}&text=${msg.text}&name=${contactName}`)
+      .catch(err => console.log(err))
+  }
 
 
-  // const sendEmail = async () => {
-  //   await fetch(`http://localhost:3001/send-email?recipient=${msg.to}&sender=${msg.from}&topic=${msg.subject}&text=${msg.text}&html=${msg.html}`)
-  //     .catch(err => console.log(err))
-  // }
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const { contactEmail, contactMessage, contactName, contactSubject } = formInputs;
+  const onChange = (e) => setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   const msg = {
     to: 'donationbuycraft@gmail.com',
     from: 'admin@study-check.net',
-    subject: 'Sending with Twilio SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    subject: contactSubject,
+    text: `${contactMessage} From: ${contactName} Email: ${contactEmail}`,
+    name: contactName
   };
-
-
-
-  const onChange = e =>
-    setFormInputs({ value: e.target.value });
-
 
   const handleEmailAlert = () => {
     setEmailAlert(true);
@@ -81,14 +51,9 @@ const ContactCard = () => {
       contactSubject: ""
 
     })
-    // sg.API(request, function (error, response) {
-    //   console.log(response.statusCode);
-    //   console.log(response.body);
-    //   console.log(response.headers);
-    // });
 
-    // sendEmail().then(result => { console.log(JSON.stringify(result)); });
-    sgMail.send(msg);
+    sendContactEmail();
+    // sgMail.send(msg);
   };
 
   return (
@@ -110,7 +75,8 @@ const ContactCard = () => {
                     id='contact-name'
                     label='Your name'
                     className='userInput'
-                    value={formInputs.contactName}
+                    name="contactName"
+                    value={contactName}
                     onChange={(e) => onChange(e)}
                   />
                 </div>
@@ -122,7 +88,9 @@ const ContactCard = () => {
                     id='contact-email'
                     label='Your email'
                     className='userInput'
-                    value={formInputs.contactEmail}
+                    name="contactEmail"
+                    value={contactEmail}
+                    onChange={(e) => onChange(e)}
                   />
                 </div>
               </MDBCol>
@@ -135,7 +103,9 @@ const ContactCard = () => {
                     id='contact-subject'
                     label='Subject'
                     className='userInput'
-                    value={formInputs.contactSubject}
+                    name="contactSubject"
+                    value={contactSubject}
+                    onChange={(e) => onChange(e)}
                   />
                 </div>
               </MDBCol>
@@ -148,7 +118,9 @@ const ContactCard = () => {
                     id='contact-message'
                     label='Your message'
                     className='userInput'
-                    value={formInputs.contactMessage}
+                    name="contactMessage"
+                    value={contactMessage}
+                    onChange={(e) => onChange(e)}
                   />
                 </div>
               </MDBCol>

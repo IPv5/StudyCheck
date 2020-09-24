@@ -1,6 +1,5 @@
 const express = require("express");
-// const cors = require('cors');
-// const sgMail = require('@sendgrid/mail');
+const sgMail = require('@sendgrid/mail');
 const mongoose = require("mongoose");
 const path = require("path");
 const routes = require("./routes");
@@ -9,28 +8,66 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3001;
 
 
+//beginning of sending email
+sgMail.setApiKey('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');
+sgMail.setSubstitutionWrappers('{{', '}}');
 
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-// app.use(cors());
+app.get('/send-contact-email', (req, res) => {
+  //get variables from query string
+  const { recipient, sender, topic, text, name } = req.query;
 
-// app.get('/send-email', (req, res) => {
-//   //get variables from query string
+  //sendgrid requirements
+  const msg = {
+    from: sender,
+    subject: topic,
+    html: text,
+    "template_id": "d-a6867e57a6d945a79b10f6830a28a9c9",
+    //d-b04ac1322f664837bcb9e22bf17b1493 signup form
+    personalizations: [
+      {
+        to: [
+          {
+            email: recipient,
+          }
+        ],
+        dynamic_template_data: {
+          name: name,
+        }
+      }
+    ]
+  };
 
-//   const { recipient, sender, topic, text, html } = req.query;
+  //send email
+  sgMail.send(msg)
+})
 
-//   //sendgrid requirements
-//   const msg = {
-//     to: recipient,
-//     from: sender,
-//     subject: topic,
-//     text: text,
-//     html: html
-//   }
+app.get('/send-signup-email', (req, res) => {
+  //get variables from query string
+  const { recipient, sender, name } = req.query;
 
-//   //send email
-//   sgMail.send(msg)
-//     .then((msg) => console.log(text))
-// })
+  //sendgrid requirements
+  const msg = {
+    from: sender,
+    html: name,
+    "template_id": "d-b04ac1322f664837bcb9e22bf17b1493",
+    personalizations: [
+      {
+        to: [
+          {
+            email: recipient,
+          }
+        ],
+        dynamic_template_data: {
+          name: name,
+        }
+      }
+    ]
+  };
+
+  //send email
+  sgMail.send(msg)
+})
+//End of added code for mail sending uncomment the sgMail.send to actually send one(it does work)
 
 // Define middleware
 app.use(express.urlencoded({ extended: true }));

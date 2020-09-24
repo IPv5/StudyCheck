@@ -16,7 +16,6 @@ export default {
     return axios.get("/api/budgets/" + id);
   },
 
-
   getTodos: function () {
     return axios.get("/api/todos");
   },
