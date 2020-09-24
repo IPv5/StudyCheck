@@ -24,15 +24,14 @@ const ContactCard = () => {
 
 
   const sendContactEmail = async () => {
-    await fetch(`http://localhost:3001/send-contact-email?recipient=${msg.to}&sender=${msg.from}&topic=${msg.subject}&text=${msg.text}&name=${contactName}`)
+    await fetch(`https://studycheck.herokuapp.com/send-contact-email?recipient=${msg.to}&sender=${msg.from}&topic=${msg.subject}&text=${msg.text}&name=${contactName}`)
       .catch(err => console.log(err))
   }
 
   const sendContactEmailToAdmins = async () => {
-    await fetch(`http://localhost:3001/send-contact-email-to-admins?recipient=${adminMsg.to}&sender=${adminMsg.from}&topic=${adminMsg.subject}&text=${adminMsg.text}&name=${contactName}`)
+    await fetch(`https://studycheck.herokuapp.com/send-contact-email-to-admins?recipient=${adminMsg.to}&sender=${adminMsg.from}&topic=${adminMsg.subject}&text=${adminMsg.text}&name=${contactName}`)
       .catch(err => console.log(err))
   }
-
 
 
   const { contactEmail, contactMessage, contactName, contactSubject } = formInputs;
